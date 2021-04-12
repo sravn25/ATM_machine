@@ -101,7 +101,8 @@ def mainMenu():
                     "Payable Loans",                    #11
                     "Credit Card Bills",                #12
                     "Deposite - in Cheque",             #13
-                    "Exit"]                             #14
+                    "Exit"                              #14
+              ]                            
 
     while (inMenu):
 
