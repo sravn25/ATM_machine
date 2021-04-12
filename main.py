@@ -123,8 +123,7 @@ def mainMenu():
             deposit()
             
         elif sel == "4":
-            #fund_transfer()
-            continue # placeholder
+            fund_transfer()
         
         elif sel == "5":
             #utilBill()
@@ -245,7 +244,7 @@ def fund_transfer():
                             accounts[transferAcc] += transferFund
                             print("Transferred Successfully")
                             print("Your balance is now RM", accounts[user].bal)
-                            transferable = False
+                            transferring = False
                             break
 
             else:
@@ -254,5 +253,5 @@ def fund_transfer():
                 if (option.lower() == "x"):
                     os.system("clear")
                     mainMenu()
-                    
+
 welcome()
