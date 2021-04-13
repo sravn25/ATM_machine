@@ -20,7 +20,7 @@ user = 0
 def filter(num, type, validity):
 
     if type == "account":
-        x = re.search("^\d{5}$", num)
+        x = re.search("\d{5}", num)
         if x:
             validity = True
             return validity
@@ -35,10 +35,14 @@ def filter(num, type, validity):
         else: 
             return validity
 
+    elif type == "space":
+        z = re.sub("\s", "", num)
+        return z
+
 def welcome():
     os.system("clear")
     print("Welcome to XYZ ATM")
-    input("Enter to proceed") 
+    input("Please Press Enter To Proceed") 
     login()
 
 def login():
@@ -51,8 +55,9 @@ def login():
         if acc.lower() == "x":
             welcome()
 
+        acc = filter(acc, "space", True)
         accFilter = filter(acc, "account", False)
-        if accFilter == True:
+        if accFilter:
                 
             cnt = 0 
             for i in range (len(accounts)):
@@ -67,9 +72,10 @@ def login():
 
                 for counter in range (6, 0, -1):
 
-                    pin = input('Please enter your 6-digit pin number:\n ')
+                    pin = input('Please enter your 6-digit pin number:\n')
+                    pin = filter(pin, "space", True)
                     pinFilter = filter(pin, "pin", False)
-                    if pinFilter == True:
+                    if pinFilter:
 
                         if int(pin) == accounts[user].pin:
                             cnt = 0                            
@@ -80,7 +86,12 @@ def login():
                             print("invalid credentials")    
                             print("You have " , counter - 1, " attempts left.") 
                             if counter == 1:
+                                cnt = 0
                                 welcome()
+                    else:
+                        print("invalid input")
+                        print("You have ", counter - 1, " attempts left.")
+
         else:
             print("invalid input")
 
@@ -88,7 +99,8 @@ def mainMenu():
 
     global user
     inMenu = True
-    menuSel = [     "Account Balance Enquiry",          # 1
+    menuSel = [     
+                    "Account Balance Enquiry",          # 1
                     "Cash Withdrawal",                  # 2
                     "Cash deposit",                     # 3 
                     "Transfer Funds Within Banks",      # 4
@@ -106,7 +118,7 @@ def mainMenu():
 
     while (inMenu):
 
-        print("Main menu \n")
+        print("\nMAIN MENU\n")
 
         for selections in range (len(menuSel)):
             print(selections + 1, " - ", menuSel[selections])
@@ -116,6 +128,7 @@ def mainMenu():
         if sel == "1":
             print("Your balance is : RM", accounts[user].bal)
             input("Press enter to continue. ")
+            os.system("clear")
 
         elif sel == "2":
             withdrawal()
@@ -175,7 +188,7 @@ def withdrawal():
     print("Cash Withdrawal \n")
     withdraw = int(input("How much would you like to withdraw? RM"))
 
-    if withdraw == 0:
+    if withdraw < 10:
         print("Please state a value more than RM 10")
 
     elif withdraw > accounts[user].bal:
@@ -183,8 +196,12 @@ def withdrawal():
         
     else:
         accounts[user].bal -= withdraw
+        for i in range (1, 6):
+                print("processing...", i * 20, "%")
+                time.sleep(0.5)
         print("Withdrawl successful. Your current balance is RM", accounts[user].bal)
         input("Press ENTER to continue")
+        os.system("clear")
 
 def deposit():
     print("Cash Deposit\n")
@@ -192,18 +209,19 @@ def deposit():
     while depositing:
         deposit = int(input("How much would you like to deposit? RM"))
 
-        if (deposit <= 0):
+        if deposit <= 0:
             print("The deposit amount must be more than RM0")
 
-        elif (deposit >= 0):
+        else:
             for i in range (1, 6):
                 print("processing...", i * 20, "%")
-                time.sleep(0.2)
+                time.sleep(0.5)
 
             accounts[user].bal += deposit
             print("Deposit successful, your current account has RM", accounts[user].bal)
             input("Press ENTER to continue")
-
+            os.system("clear")
+            break
 
 def fund_transfer():
     print("Transfer Funds within Banks\n")
@@ -214,14 +232,20 @@ def fund_transfer():
 
     elif accounts[user].bal >= 0:
         transferring = True
-
+        transferable = False
+        same = False
         while transferring:
             transferAcc = input("Enter the Account No. for transfer: ")
 
             if filter(transferAcc, "account", False): # checks if account format is correct
                 for i in range (len(accounts)):
-                    if transferAcc == accounts[i].account:
+                    if i == user:
+                        same = True
+                        continue
+
+                    elif int(transferAcc) == accounts[i].account:
                         transferable = True 
+                        receiver = i
                         break
 
                 if transferable:
@@ -241,12 +265,25 @@ def fund_transfer():
                             print("Your current balance is RM", accounts[user].bal)
                             continue
                         else: 
-                            accounts[user].bal -= transferFund
-                            accounts[transferAcc] += transferFund
+                            newBalTransfer = int(accounts[user].bal)- transferFund
+                            accounts[user].bal = str(newBalTransfer)
+
+                            newBalReceive = int(accounts[receiver].bal) + transferFund
+                            accounts[receiver].bal = str(newBalReceive)
+
                             print("Transferred Successfully")
                             print("Your balance is now RM", accounts[user].bal)
+                            input("Press ENTER to continue")
                             transferring = False
                             break
+
+                else:
+                    print("Account does not exist")
+                    input("Press ENTER to continue")
+
+            elif same:
+                print("You cannot transfer to yourself")
+                input("Press ENTER to continue")
 
             else:
                 print("Invalid input\nPress ENTER to continue")
