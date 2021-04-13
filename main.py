@@ -179,6 +179,7 @@ def mainMenu():
             os.system("clear")
             print("Thank you, have a great day!")
             input("Press ENTER to exit")
+            exit()
 
         else:
             print("Please enter a valid selection!")
@@ -276,14 +277,14 @@ def fund_transfer():
                             input("Press ENTER to continue")
                             transferring = False
                             break
+                
+                elif same:
+                    print("You cannot transfer to yourself")
+                    input("Press ENTER to continue")
 
                 else:
                     print("Account does not exist")
                     input("Press ENTER to continue")
-
-            elif same:
-                print("You cannot transfer to yourself")
-                input("Press ENTER to continue")
 
             else:
                 print("Invalid input\nPress ENTER to continue")
