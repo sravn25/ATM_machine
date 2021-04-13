@@ -7,9 +7,9 @@ for i in range (1, 6):
 ```
 ## enter and x
 
+```py
 procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel"):
 
-```py
 if procedure.lower() == "x":
     paying = False
     os.system("clear")
