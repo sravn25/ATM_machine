@@ -1,12 +1,12 @@
-#processing#
+## processing
 
-for i in range (1, 6):
-                print("processing...", i * 20, "%")
-                time.sleep(0.5)
+    for i in range (1, 6):
+        print("processing...", i * 20, "%")
+        time.sleep(0.5)
 
 
 
-#enter and x#
+## enter and x
 
 procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel"):
 
@@ -15,20 +15,20 @@ procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X'
             os.system("clear")
 
 
-#minus#
+## minus
 
-paid = int(accounts[user].bal) - 
-                accounts[user].bal = str(paid) 
+    paid = int(accounts[user].bal) - 
+        accounts[user].bal = str(paid) 
 
-#back to start#
+## back to start
 
-os.system("clear")
-                    mainMenu()
+    os.system("clear")
+        mainMenu()
 
 
-#restrict#
+## restrict
 
-type == "mobile":
+    type == "mobile":
         i = re.search("\d{10}", num)
         if i:
             validity = True

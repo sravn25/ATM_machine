@@ -1,19 +1,18 @@
 import re # regex lib
 import time # sleep
-import datetime # current time
-import os
+import os # clearing terminal
 
-class Account:
-    def __init__(self, account, pin, bal = 0, util = 0):
+class Account: # account template
+    def __init__(self, account, pin, bal = 0, util = 0, oact = False):
         self.account = account
         self.pin = pin
         self.bal = bal
         self.util = util
         self.oact = oact
         
-acc1 = Account(45612, 987654, 100000, 360, "No")
-acc2 = Account(12345, 123456, 100, 89, "Yes")
-acc3 = Account(00000, 000000, 0, 0, "No")
+acc1 = Account(45612, 987654, 100000, 360, True)
+acc2 = Account(12345, 123456, 100, 89, False)
+acc3 = Account(00000, 000000, 0, 0, False)
 accounts = [acc1, acc2]
 accounts.append(acc3)
 user = 0
@@ -58,6 +57,7 @@ def welcome():
 def login():
 
     global user
+    global loginTime
     tmp = 1
     while tmp == 1: 
 
@@ -88,6 +88,7 @@ def login():
 
                         if int(pin) == accounts[user].pin:
                             cnt = 0                            
+                            loginTime = time.strftime("%A, %d %B %Y %X", time.localtime())
                             os.system("clear")
                             mainMenu()
                                 
@@ -97,6 +98,7 @@ def login():
                             if counter == 1:
                                 cnt = 0
                                 welcome()
+
                     else:
                         print("invalid input")
                         print("You have ", counter - 1, " attempts left.")
@@ -107,6 +109,8 @@ def login():
 def mainMenu():
 
     global user
+    global loginTime
+    print("loginTime")
     inMenu = True
     menuSel = [     
                     "Account Balance Enquiry",          # 1
@@ -158,12 +162,10 @@ def mainMenu():
             changePin()
         
         elif sel == "8":
-            #overseaActivation()
-            continue # placeholder
+            overseaActivation()
         
         elif sel == "9":
-            #printStatements()
-            continue # placeholder
+            printStatements()
                     
         elif sel == "10":
             #payTax()
@@ -178,7 +180,7 @@ def mainMenu():
             continue # placeholder
         
         elif sel == "13":
-            #depositeCheque()
+            #depositCheque()
             continue # placeholder
         
         elif sel == "14":
@@ -262,16 +264,20 @@ def fund_transfer():
                     while True:
                         try:
                             transferFund = int(input("Enter the amount for transfer: RM"))
+
                         except ValueError:
                             print("Please enter an actual number")
                             continue
+
                         except transferFund <= 0:
                             print("Please enter a valid amount")
                             continue
+
                         except accounts[user].bal < transferFund:
                             print("You do not have enough balance")
                             print("Your current balance is RM", accounts[user].bal)
                             continue
+
                         else: 
                             newBalTransfer = accounts[user].bal- transferFund
                             accounts[user].bal = newBalTransfer
@@ -477,6 +483,32 @@ def changePin():
                     input("Wrong PIN number!\nPress ENTER to continue")
 
 def overseaActivation():
-  print("Your current state of Oversea usetage is:" )
+    state = accounts[user].oact
+    print("Your current state of Oversea usage is:", end = " ") 
 
+    if state:
+        print("Activated")
+        input("Press ENTER to continue")
+        os.system("clear")
+
+    else:
+        print("Inactive")
+        activate = input("Would you like to activate it?\nPress ENTER to activate\nEnter 'X' to cancel")  
+        
+        if activate.lower() == "x":
+            os.system("clear")
+            
+        else:
+            accounts[user].oact = True
+            input("It is now activated\nPress ENTER to continue")
+            os.system("clear")
+
+def printStatements():
+  procedure = input("would you like to print your mini statement?\nPress ENTER to proceed\nEnter 'X' to cancel"):
+
+        if procedure.lower() == "x":
+            paying = False
+            os.system("clear")
+
+  
 welcome()
