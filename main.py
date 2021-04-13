@@ -4,14 +4,16 @@ import datetime # current time
 import os
 
 class Account:
-    def __init__(self, account, pin, bal):
+    def __init__(self, account, pin, bal = 0, util = 0):
         self.account = account
         self.pin = pin
         self.bal = bal
-
-acc1 = Account(45612, 987654, 100000)
-acc2 = Account(12345, 123456, 100)
-acc3 = Account(00000, 000000, 0)
+        self.util = util
+        self.oact = oact
+        
+acc1 = Account(45612, 987654, 100000, 360, "No")
+acc2 = Account(12345, 123456, 100, 89, "Yes")
+acc3 = Account(00000, 000000, 0, 0, "No")
 accounts = [acc1, acc2]
 accounts.append(acc3)
 user = 0
@@ -38,6 +40,14 @@ def filter(num, type, validity):
     elif type == "space":
         z = re.sub("\s", "", num)
         return z
+    
+    elif type == "mobile":
+        i = re.search("\d{10}", num)
+        if i:
+            validity = True
+            return validity
+        else:
+            return validity
 
 def welcome():
     os.system("clear")
@@ -73,7 +83,6 @@ def login():
                 for counter in range (6, 0, -1):
 
                     pin = input('Please enter your 6-digit pin number:\n')
-                    pin = filter(pin, "space", True)
                     pinFilter = filter(pin, "pin", False)
                     if pinFilter:
 
@@ -140,16 +149,13 @@ def mainMenu():
             fund_transfer()
         
         elif sel == "5":
-            #utilBill()
-            continue # placeholder
+            utilBill()
         
         elif sel == "6":
-            #mobileTopUpp()
-            continue # placeholder
+            mobileTopUp()
         
         elif sel == "7":
-            #changePin()
-            continue # placeholder
+            changePin()
         
         elif sel == "8":
             #overseaActivation()
@@ -221,8 +227,9 @@ def deposit():
             accounts[user].bal += deposit
             print("Deposit successful, your current account has RM", accounts[user].bal)
             input("Press ENTER to continue")
+            depositing = False
             os.system("clear")
-            break
+           
 
 def fund_transfer():
     print("Transfer Funds within Banks\n")
@@ -254,7 +261,7 @@ def fund_transfer():
 
                     while True:
                         try:
-                            transferFund = int(input("Enter the amount for transfer: "))
+                            transferFund = int(input("Enter the amount for transfer: RM"))
                         except ValueError:
                             print("Please enter an actual number")
                             continue
@@ -266,25 +273,25 @@ def fund_transfer():
                             print("Your current balance is RM", accounts[user].bal)
                             continue
                         else: 
-                            newBalTransfer = int(accounts[user].bal)- transferFund
-                            accounts[user].bal = str(newBalTransfer)
+                            newBalTransfer = accounts[user].bal- transferFund
+                            accounts[user].bal = newBalTransfer
 
-                            newBalReceive = int(accounts[receiver].bal) + transferFund
-                            accounts[receiver].bal = str(newBalReceive)
+                            newBalReceive = accounts[receiver].bal + transferFund
+                            accounts[receiver].bal = newBalReceive
 
                             print("Transferred Successfully")
                             print("Your balance is now RM", accounts[user].bal)
                             input("Press ENTER to continue")
                             transferring = False
                             break
-                
-                elif same:
-                    print("You cannot transfer to yourself")
-                    input("Press ENTER to continue")
 
                 else:
                     print("Account does not exist")
                     input("Press ENTER to continue")
+
+            elif same:
+                print("You cannot transfer to yourself")
+                input("Press ENTER to continue")
 
             else:
                 print("Invalid input\nPress ENTER to continue")
@@ -292,5 +299,184 @@ def fund_transfer():
                 if (option.lower() == "x"):
                     os.system("clear")
                     mainMenu()
+
+def utilBill():
+    paying = True
+    while paying:
+
+        print (f"Your current outstanding utilities bill is RM {accounts[user].util}")
+        procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
+
+        if procedure.lower() == "x":
+            paying = False
+            os.system("clear")
+
+        else: 
+            for i in range (1, 6):
+                print("processing...", i * 20, "%")
+                time.sleep(0.5)
+            
+            print("Processed!")
+            time.sleep(0.5)
+            os.system("clear")
+
+            paid = accounts[user].util
+            remaining = accounts[user].bal - accounts[user].util
+            accounts[user].bal = remaining 
+            accounts[user].util = 0
+            print(f"You paid RM{paid}")
+            print(f"Remaining utility bill = RM{accounts[user].util}")
+            print(f"Your balance is now RM{accounts[user].bal}")
+
+            input("Press ENTER to continue") 
+            os.system("clear")
+            print ("Thank you for using XYZ Bank service")
+            time.sleep(1.0)
+
+            paying = False               
+            os.system("clear")
+            mainMenu()
+                
+def mobileTopUp():
+    mobile_number = input("Please enter your 10-digit mobile number\n:")
+    if filter(mobile_number, "mobile", False):
+        mobile_number = int(mobile_number)
+
+        processing = True
+        while processing:
+            print("""How much would you like to top up?
+            1. Small ball package - RM10
+            2. Big ball package - RM25
+            3. Huge ball package - RM50
+            4. Ultimate Ligma!!! - RM100""")
+
+            choice = input("How much would you like to top up? : RM")
+            
+            if choice == "1":
+                print("You have chosen the small ball package (RM10)")
+                print("\nRM10 will now be deducted from your account") 
+                print("Processing.", end ="")
+                for i in range (5):
+                    print(".", end = "")                        
+                    time.sleep(0.2)
+
+                if accounts[user].bal < 10:
+                    time.sleep(2)
+                    print("Insufficient amount")
+                    input("Press ENTER to continue") 
+                    processing = False  
+
+                else:    
+                    time.sleep(2)
+                    os.system("clear")
+                    print("Process completed")
+                    accounts[user].bal -= 10
+                    print("Your balance is now RM", accounts[user].bal)
+                    processing = False
+                    input("Press ENTER to continue")
+            
+            elif choice == "2":
+                print("You have chosen the big ball package (RM25)")
+                print("\nRM25 will now be deducted from your account") 
+                print("Processing.", end ="")
+                for i in range (5):
+                    print(".", end = "")                        
+                    time.sleep(0.2)
+
+                if accounts[user].bal < 25:
+                    time.sleep(2)
+                    print("Insufficient amount")
+                    input("Press ENTER to continue") 
+
+                else: 
+                    time.sleep(2)
+                    os.system("clear")
+                    print("Process completed")
+                    accounts[user].bal -= 25
+                    print("Your balance is now RM", accounts[user].bal)
+                    input("Press ENTER to continue")
+                    processing = False
+            
+            elif choice == "3":
+                print("You have chosen the huge ball package (RM50)")
+                print("\nRM50 will now be deducted from your account") 
+                print("Processing.", end ="")
+                for i in range (5):
+                    print(".", end = "")                        
+                    time.sleep(0.2)
+
+                if accounts[user].bal < 50:
+                    time.sleep(2)
+                    print("Insufficient amount")
+                    input("Press ENTER to continue") 
+
+                else:
+                    time.sleep(2)
+                    os.system("clear")
+                    print("Process completed")
+                    accounts[user].bal -= 50
+                    print("Your balance is now RM", accounts[user].bal)
+                    input("Press ENTER to continue")
+                    processing = False
+
+            elif choice == "4":
+                print("You have chosen the ultimate ligma!!! package (RM100)")
+                print("\nRM100 will now be deducted from your account") 
+                print("Processing.", end ="")
+                for i in range (5):
+                    print(".", end = "")                        
+                    time.sleep(0.2)
+
+                if accounts[user].bal < 100:
+                    time.sleep(2)
+                    print("Insufficient amount")
+                    input("Press ENTER to continue") 
+
+                else: 
+                    time.sleep(2)
+                    os.system("clear")
+                    print("Process completed")
+                    accounts[user].bal -= 100
+                    print("Your balance is now RM", accounts[user].bal)
+                    input("Press ENTER to continue")
+                    processing = False 
+
+            else:
+                input("Invalid choice!\nPress ENTER to continue")
+                os.system("clear")
+            
+    else:
+        input("Invalid format!\nPlease enter a 10-digit number\n\nPress ENTER to continue")
+        os.system("clear")
+
+def changePin():
+    change = True
+    while change:
+            
+        print("Change ATM pin\n")
+        proceed = input("Do you want to change your ATM pin number?\nPress ENTER to continue\nEnter 'X' to return")
+    
+        if proceed.lower() == "x":
+           change = False 
+           os.system("clear")
+
+        else:
+            auth = False
+            while auth == False:
+                confirmation = input("Please input your PIN number again to confirm")
+                if confirmation == accounts[user].pin:
+                    newPin = input("Please input your new PIN number\n")
+                    cfmPin = input("Please input your new PIN number again\n")
+    
+                    if newPin == cfmPin:
+                        accounts[user].pin = newPin
+                        auth = True                             
+                        change = False
+                        input("Press ENTER to continue")
+                else:
+                    input("Wrong PIN number!\nPress ENTER to continue")
+
+def overseaActivation():
+  print("Your current state of Oversea usetage is:" )
 
 welcome()
