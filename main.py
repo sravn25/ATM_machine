@@ -487,6 +487,7 @@ def changePin():
         else:
             auth = False
             while auth == False:
+                attempts = 3
                 confirmation = input("Please input your PIN number again to confirm")
                 if confirmation == accounts[user].pin:
                     newPin = input("Please input your new PIN number\n")
@@ -498,6 +499,16 @@ def changePin():
                         change = False
                         actions.append("Change ATM PIN number")
                         input("Press ENTER to continue")
+                    
+                    else:
+                        if attempts > 0:
+                            input("Wrong PIN number!\nYou have ," attempts, " left.\nPress ENTER to continue")
+                            attempts -= 1
+                        else:
+                            input("Action denied\nPress ENTER to continue")
+                            os.system("clear")
+                            break
+
                 else:
                     input("Wrong PIN number!\nPress ENTER to continue")
 
@@ -540,7 +551,7 @@ def printStatements():
         os.system("clear")
 
 def incomeTax():
-  print (f"Your current income tax is RM {accounts[user].util}")
+    print (f"Your current income tax is RM {accounts[user].util}")
         procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
 
         if procedure.lower() == "x":
