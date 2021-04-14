@@ -1,9 +1,9 @@
-import re # regex lib
 import time # sleep
 import os # clearing terminal
+import re # regex lib
 
 class Account: # account template
-    def __init__(self, account, pin, bal = 0, util = 0, oact = False, ictx = 0, cbill = 0):
+    def __init__(self, account, pin, bal = 0, util = 0, oact = False, ictx = 0, cbill = 0, cloan = 0, bloan = 0, hloan = 0):
         self.account = account
         self.pin = pin
         self.bal = bal
@@ -11,11 +11,14 @@ class Account: # account template
         self.oact = oact
         self.ictx = ictx
         self.cbill = cbill
+        self.cloan = cloan
+        self.bloan = bloan
+        self.hloan = hloan
         
-# Account (account, pin, bal, util, oact, ictx, cbill)        
-acc1 = Account(45612, 987654, 100000, 360, True, 2000, 420)
-acc2 = Account(12345, 123456, 100, 89, False, 5000, 600)
-acc3 = Account(00000, 000000, 0, 0, False, 0, 0)
+# Account (account, pin, bal, util, oact, ictx, cbill, cloan, bloan, hloan)        
+acc1 = Account(45612, 987654, 100000, 360, True, 2000, 420, 1445, 0, 1884)
+acc2 = Account(12345, 123456, 100, 89, False, 5000, 600, 600, 0, 1963)
+acc3 = Account(00000, 000000, 0, 0, False, 0, 0, 0, 0, 0)
 accounts = [acc1, acc2]
 accounts.append(acc3)
 user = 0
@@ -52,7 +55,7 @@ def filter(num, type, validity):
         else:
             return validity
 
-def welcome():
+def main():
     os.system("clear")
     print("Welcome to XYZ ATM")
     input("Please Press Enter To Proceed") 
@@ -115,7 +118,7 @@ def mainMenu():
 
     global user
     global loginTime
-    print("loginTime")
+    print(loginTime)
     inMenu = True
     menuSel = [     
                     "Account Balance Enquiry",          # 1
@@ -134,7 +137,7 @@ def mainMenu():
                     "Exit"                              #14
               ]                            
 
-    while (inMenu):
+    while inMenu:
 
         print("\nMAIN MENU\n")
 
@@ -175,24 +178,22 @@ def mainMenu():
                     
         elif sel == "10":
             incomeTax()
-            continue # placeholder
         
         elif sel == "11":
-            #payLoans()
-            continue # placeholder
+            payLoans()
         
         elif sel == "12":
-            #ccBills()
-            continue # placeholder
-        
+            cbill()
+            
         elif sel == "13":
-            #depositCheque()
-            continue # placeholder
+            cheque()
+            
         
         elif sel == "14":
             os.system("clear")
             print("Thank you, have a great day!")
             input("Press ENTER to exit")
+            inMenu = False
             exit()
 
         else:
@@ -327,7 +328,7 @@ def utilBill():
 
         print (f"Your current outstanding utilities bill is RM {accounts[user].util}")
         if accounts[user].bal < accounts[user].util:
-            intput("You have insufficient amount to pay your bill\nPress ENTER to return")
+            input("You have insufficient amount to pay your bill\nPress ENTER to return")
             paying = False
             os.system("clear")
 
@@ -414,7 +415,6 @@ def mobileTopUp():
                 for i in range (5):
                     print(".", end = "")                        
                     time.sleep(0.2)
-                    
 
                 if accounts[user].bal < 25:
                     time.sleep(2)
@@ -539,9 +539,16 @@ def overseaActivation():
 
     if state:
         print("Activated")
-        input("Press ENTER to continue")
-        os.system("clear")
+        deactivate = input("Would you like to deactivate it?\nPress ENTER to deactivate\nEnter 'x' to return")
 
+        if deactivate.lower() == "x":
+            os.system("clear")
+        else:
+            accounts[user].oact = False 
+            input("It has been deactivated\nPress ENTER to continue")
+            actions.append("Deactivated Oversea Usage")
+            os.system("clear")
+            
     else:
         print("Inactive")
         activate = input("Would you like to activate it?\nPress ENTER to activate\nEnter 'X' to cancel")  
@@ -566,7 +573,7 @@ def printStatements():
         os.system("clear")
         print("Statements\n")
         for i in range (len(actions)):
-            print(f"{i}. {actions[i]}")
+            print(f"{i+1}. {actions[i]}")
             time.sleep(0.1)
             
         input("Press ENTER to continue")
@@ -608,11 +615,141 @@ def incomeTax():
             os.system("clear")
 
 def payLoans():
-    continue
+  
+    paying = True
+    while paying:
+        print("Loan Menu\n")
+        print("1. Car Loan\n2. Bank Loan\n3. House Loan\n")
     
-def credit_bill():
-  paying = True
-  while paying:
+        selection = input("Which loan would you like to enquire?\nEnter 'x' to return")
+        
+        if selection == "1":
+
+            print (f"Your current outstanding car loan is RM {accounts[user].cloan}")
+            procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
+    
+            if procedure.lower() == "x":
+                paying = False
+                os.system("clear")
+    
+            else: 
+                if accounts[user].bal < accounts[user].cloan:
+                    input("You have insufficient amount to pay your loan\nPress ENTER to return")
+                    paying = False
+
+                else:
+                    for i in range (1, 6):
+                        print("processing...", i * 20, "%")
+                        time.sleep(0.5)
+                
+                print("Processed!")
+                time.sleep(0.5)
+                os.system("clear")
+    
+                paid = accounts[user].cloan
+                remaining = accounts[user].bal - accounts[user].cloan
+                accounts[user].bal = remaining 
+                accounts[user].cloan = 0
+                print(f"You paid RM{paid}")
+                print(f"Remaining Car Loan for this month = RM{accounts[user].cloan}")
+                print(f"Your balance is now RM{accounts[user].bal}")
+    
+                input("Press ENTER to continue") 
+                actions.append("Paid Car Loan")
+                os.system("clear")
+                print ("Thank you for using XYZ Bank service")
+                time.sleep(1.0)
+    
+                paying = False               
+                os.system("clear")
+
+        elif selection == "2":
+
+            print (f"Your current outstanding bank loan is RM {accounts[user].bloan}")
+            procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
+    
+            if procedure.lower() == "x":
+                paying = False
+                os.system("clear")
+    
+            else: 
+                if accounts[user].bal < accounts[user].bloan:
+                    input("You have insufficient amount to pay your loan\nPress ENTER to return")
+                    paying = False
+
+                else:
+                    for i in range (1, 6):
+                        print("processing...", i * 20, "%")
+                        time.sleep(0.5)
+                
+                print("Processed!")
+                time.sleep(0.5)
+                os.system("clear")
+    
+                paid = accounts[user].bloan
+                remaining = accounts[user].bal - accounts[user].bloan
+                accounts[user].bal = remaining 
+                accounts[user].bloan = 0
+                print(f"You paid RM{paid}")
+                print(f"Remaining Car Loan for this month = RM{accounts[user].bloan}")
+                print(f"Your balance is now RM{accounts[user].bal}")
+    
+                input("Press ENTER to continue") 
+                actions.append("Paid Bank Loan")
+                os.system("clear")
+                print ("Thank you for using XYZ Bank service")
+                time.sleep(1.0)
+    
+                paying = False               
+                os.system("clear")
+
+        elif selection == "3":
+
+            print (f"Your current outstanding house loan is RM {accounts[user].hloan}")
+            procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
+    
+            if procedure.lower() == "x":
+                paying = False
+                os.system("clear")
+    
+            else: 
+                if accounts[user].bal < accounts[user].hloan:
+                    input("You have insufficient amount to pay your loan\nPress ENTER to return")
+                    paying = False
+
+                else:
+                    for i in range (1, 6):
+                        print("processing...", i * 20, "%")
+                        time.sleep(0.5)
+                
+                print("Processed!")
+                time.sleep(0.5)
+                os.system("clear")
+    
+                paid = accounts[user].hloan
+                remaining = accounts[user].bal - accounts[user].hloan
+                accounts[user].bal = remaining 
+                accounts[user].hloan = 0
+                print(f"You paid RM{paid}")
+                print(f"Remaining Car Loan for this month = RM{accounts[user].hloan}")
+                print(f"Your balance is now RM{accounts[user].bal}")
+    
+                input("Press ENTER to continue") 
+                actions.append("Paid House Loan")
+                os.system("clear")
+                print ("Thank you for using XYZ Bank service")
+                time.sleep(1.0)
+    
+                paying = False               
+                os.system("clear")
+
+        else:
+            input("Invalid selection!\nPress ENTER to continue")
+            os.system("clear")
+
+def cbill():
+    paying = True
+    while paying:
 
         print (f"Your current outstanding credit card bill is RM {accounts[user].cbill}")
         proceed = input("Would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
@@ -622,7 +759,7 @@ def credit_bill():
             os.system("clear")
 
         if accounts[user].bal < accounts[user].cbill:
-            intput("You have insufficient amount to pay your bill\nPress ENTER to return")
+            input("You have insufficient amount to pay your bill\nPress ENTER to return")
             paying = False
             os.system("clear")
 
@@ -653,8 +790,19 @@ def credit_bill():
             os.system("clear")
     
 def cheque():
-  print("Please place your cheque in the deposit box.")
+    procedure = input("Please place the cheque facing the keypads.\nPress ENTER to proceed\nEnter 'X' to cancel")
+    
+    if procedure.lower() == "x":
+        input("Press ENTER to continue")
+        os.system("clear")
+    else: 
+        for i in range (1, 10):
+          print("validating...", i * 10, "%")
+          time.sleep(0.5)
+        print("Your cheque will be send to validate\nThank you for using XYZ Bank services.")
+        actions.append("Deposited cheque")
+        time.sleep(3.0)
+        os.system("clear")
 
-            
 if __name__ == "__main__":
-    welcome()
+    main()
