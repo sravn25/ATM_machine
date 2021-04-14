@@ -287,12 +287,11 @@ def fund_transfer():
                             continue
 
                         except accounts[user].bal < transferFund:
-                            for i in range (1, 6):
-                              print("transferring...", i * 20, "%")
-                              time.sleep(0.5)
-                              print("You do not have enough balance")
-                              print("Your current balance is RM", accounts[user].bal)
-                              3continue
+                            
+                            print("You do not have enough balanceprint")
+                            print("Your current balance is RM", accounts[user].bal)
+                            continue
+                              
 
                         else: 
                             newBalTransfer = accounts[user].bal- transferFund
@@ -300,7 +299,9 @@ def fund_transfer():
 
                             newBalReceive = accounts[receiver].bal + transferFund
                             accounts[receiver].bal = newBalReceive
-
+                            for i in range (1, 6):
+                              print("transferring...", i * 20, "%")
+                              time.sleep(0.5)
                             print("Transferred Successfully")
                             print("Your balance is now RM", accounts[user].bal)
                             actions.append(f"Transferred RM{str(transferFund)} to another account")
