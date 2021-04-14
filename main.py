@@ -287,9 +287,12 @@ def fund_transfer():
                             continue
 
                         except accounts[user].bal < transferFund:
-                            print("You do not have enough balance")
-                            print("Your current balance is RM", accounts[user].bal)
-                            continue
+                            for i in range (1, 6):
+                              print("transferring...", i * 20, "%")
+                              time.sleep(0.5)
+                              print("You do not have enough balance")
+                              print("Your current balance is RM", accounts[user].bal)
+                              3continue
 
                         else: 
                             newBalTransfer = accounts[user].bal- transferFund
@@ -621,9 +624,12 @@ def payLoans():
         print("Loan Menu\n")
         print("1. Car Loan\n2. Bank Loan\n3. House Loan\n")
     
-        selection = input("Which loan would you like to enquire?\nEnter 'x' to return")
-        
-        if selection == "1":
+        selection = input("Which loan would you like to enquire?\nEnter 'x' to return\n")
+
+        if selection.lower() == "x":
+            os.system("clear")
+
+        elif selection == "1":
 
             print (f"Your current outstanding car loan is RM {accounts[user].cloan}")
             procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
