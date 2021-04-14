@@ -3,17 +3,19 @@ import time # sleep
 import os # clearing terminal
 
 class Account: # account template
-    def __init__(self, account, pin, bal = 0, util = 0, oact = False, ictx = 0):
+    def __init__(self, account, pin, bal = 0, util = 0, oact = False, ictx = 0, cbill = 0):
         self.account = account
         self.pin = pin
         self.bal = bal
         self.util = util
         self.oact = oact
         self.ictx = ictx
+        self.cbill = cbill
         
-acc1 = Account(45612, 987654, 100000, 360, True, 2000)
-acc2 = Account(12345, 123456, 100, 89, False, 5000)
-acc3 = Account(00000, 000000, 0, 0, False, 0)
+# Account (account, pin, bal, util, oact, ictx, cbill)        
+acc1 = Account(45612, 987654, 100000, 360, True, 2000, 420)
+acc2 = Account(12345, 123456, 100, 89, False, 5000, 600)
+acc3 = Account(00000, 000000, 0, 0, False, 0, 0)
 accounts = [acc1, acc2]
 accounts.append(acc3)
 user = 0
@@ -172,7 +174,7 @@ def mainMenu():
             printStatements()
                     
         elif sel == "10":
-            #payTax()
+            incomeTax()
             continue # placeholder
         
         elif sel == "11":
@@ -201,11 +203,15 @@ def withdrawal():
     print("Cash Withdrawal \n")
     withdraw = int(input("How much would you like to withdraw? RM"))
 
-    if withdraw < 10:
+    if withdraw < 10: 
         print("Please state a value more than RM 10")
+        time.sleep(3)
+        os.system("clear")
 
     elif withdraw > accounts[user].bal:
-        print ("You do not have enough balance to withdraw")
+        print ("You do not have sufficient balance to withdraw")
+        time.sleep(3)
+        os.system("clear")
         
     else:
         accounts[user].bal -= withdraw
@@ -295,8 +301,10 @@ def fund_transfer():
                             print("Your balance is now RM", accounts[user].bal)
                             actions.append(f"Transferred RM{str(transferFund)} to another account")
                             input("Press ENTER to continue")
+                            os.system("clear")
                             transferring = False
                             break
+                            
 
                 else:
                     print("Account does not exist")
@@ -364,13 +372,13 @@ def mobileTopUp():
 
         processing = True
         while processing:
-            print("""How much would you like to top up?
+            print("""These are the avaliable package to choose from
             1. Small ball package - RM10
             2. Big ball package - RM25
             3. Huge ball package - RM50
             4. Ultimate Ligma!!! - RM100""")
 
-            choice = input("How much would you like to top up? : RM")
+            choice = input("Which baller package would u choose? : ")
             
             if choice == "1":
                 print("You have chosen the small ball package (RM10)")
@@ -379,12 +387,14 @@ def mobileTopUp():
                 for i in range (5):
                     print(".", end = "")                        
                     time.sleep(0.2)
+                    
 
                 if accounts[user].bal < 10:
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
                     processing = False  
+                    os.system("clear")
 
                 else:    
                     time.sleep(2)
@@ -395,6 +405,7 @@ def mobileTopUp():
                     actions.append("Mobile Top Up for RM10")
                     processing = False
                     input("Press ENTER to continue")
+                    os.system("clear")
             
             elif choice == "2":
                 print("You have chosen the big ball package (RM25)")
@@ -403,11 +414,13 @@ def mobileTopUp():
                 for i in range (5):
                     print(".", end = "")                        
                     time.sleep(0.2)
+                    
 
                 if accounts[user].bal < 25:
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
+                    os.system("clear")
 
                 else: 
                     time.sleep(2)
@@ -417,7 +430,9 @@ def mobileTopUp():
                     print("Your balance is now RM", accounts[user].bal)
                     actions.append("Mobile Top Up for RM25")
                     input("Press ENTER to continue")
+                    os.system("clear")
                     processing = False
+                    
             
             elif choice == "3":
                 print("You have chosen the huge ball package (RM50)")
@@ -426,11 +441,13 @@ def mobileTopUp():
                 for i in range (5):
                     print(".", end = "")                        
                     time.sleep(0.2)
+                    
 
                 if accounts[user].bal < 50:
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
+                    os.system("clear")
 
                 else:
                     time.sleep(2)
@@ -440,7 +457,9 @@ def mobileTopUp():
                     print("Your balance is now RM", accounts[user].bal)
                     actions.append("Mobile Top Up for RM50")
                     input("Press ENTER to continue")
+                    os.system("clear")
                     processing = False
+                    
 
             elif choice == "4":
                 print("You have chosen the ultimate ligma!!! package (RM100)")
@@ -449,11 +468,13 @@ def mobileTopUp():
                 for i in range (5):
                     print(".", end = "")                        
                     time.sleep(0.2)
+                    
 
                 if accounts[user].bal < 100:
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
+                    os.system("clear")
 
                 else: 
                     time.sleep(2)
@@ -463,6 +484,7 @@ def mobileTopUp():
                     print("Your balance is now RM", accounts[user].bal)
                     actions.append("Mobile Top Up for RM100")
                     input("Press ENTER to continue")
+                    os.system("clear")
                     processing = False 
 
             else:
@@ -488,7 +510,7 @@ def changePin():
             auth = False
             while auth == False:
                 attempts = 3
-                confirmation = input("Please input your PIN number again to confirm")
+                confirmation = int(input("Please input your PIN number again to confirm :"))
                 if confirmation == accounts[user].pin:
                     newPin = input("Please input your new PIN number\n")
                     cfmPin = input("Please input your new PIN number again\n")
@@ -501,13 +523,12 @@ def changePin():
                         input("Press ENTER to continue")
                     
                     else:
-                        if attempts > 0:
-                            input("Wrong PIN number!\nYou have ," attempts, " left.\nPress ENTER to continue")
+                        while attempts > 0:
+                            input("Wrong PIN number!\nYou have", attempts, " left.\nPress ENTER to continue")
                             attempts -= 1
                         else:
                             input("Action denied\nPress ENTER to continue")
                             os.system("clear")
-                            break
 
                 else:
                     input("Wrong PIN number!\nPress ENTER to continue")
@@ -535,26 +556,73 @@ def overseaActivation():
             os.system("clear")
 
 def printStatements():
-  procedure = input("would you like to print your mini statement?\nPress ENTER to proceed\nEnter 'X' to cancel"):
+    procedure = input("would you like to print now?\nPress ENTER to proceed\nEnter 'X' to cancel")
 
-        if procedure.lower() == "x":
-            paying = False
-            os.system("clear")
-        
+    if procedure.lower() == "x":
+        input("Press ENTER to continue")
+        os.system("clear")
+
+    else:
         os.system("clear")
         print("Statements\n")
         for i in range (len(actions)):
             print(f"{i}. {actions[i]}")
             time.sleep(0.1)
-
+            
         input("Press ENTER to continue")
         os.system("clear")
 
 def incomeTax():
-    print (f"Your current income tax is RM {accounts[user].util}")
-        procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
+    print(f"Your current income tax is RM {accounts[user].ictx}")
+    proceed = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel\n")
 
-        if procedure.lower() == "x":
+    if proceed.lower() == "x":
+        os.system("clear")
+
+    else: 
+        for i in range (1, 6):
+            print("processing...", i * 20, "%")
+            time.sleep(0.5)
+        
+        if accounts[user].bal < accounts[user].ictx:
+            input("Insufficient amount!\nPress ENTER to return")
+            os.system("clear")
+
+        else: 
+            print("Processed!")
+            time.sleep(0.5)
+            os.system("clear")
+    
+            paid = accounts[user].ictx
+            remaining = accounts[user].bal - accounts[user].ictx
+            accounts[user].bal = remaining 
+            accounts[user].ictx = 0
+            print(f"You paid RM{paid}")
+            print(f"Remaining unpaid income tax = RM{accounts[user].ictx}")
+            print(f"Your balance is now RM{accounts[user].bal}")
+    
+            input("Press ENTER to continue")
+            os.system("clear")
+            print ("Thank you for using XYZ Bank service")
+            time.sleep(1.0)
+            os.system("clear")
+
+def payLoans():
+    continue
+    
+def credit_bill():
+  paying = True
+  while paying:
+
+        print (f"Your current outstanding credit card bill is RM {accounts[user].cbill}")
+        proceed = input("Would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
+
+        if proceed.lower() == "x":
+            paying = False
+            os.system("clear")
+
+        if accounts[user].bal < accounts[user].cbill:
+            intput("You have insufficient amount to pay your bill\nPress ENTER to return")
             paying = False
             os.system("clear")
 
@@ -567,20 +635,26 @@ def incomeTax():
             time.sleep(0.5)
             os.system("clear")
 
-            paid = accounts[user].util
-            remaining = accounts[user].bal - accounts[user].ictx
+            paid = accounts[user].cbill
+            remaining = accounts[user].bal - accounts[user].cbill
             accounts[user].bal = remaining 
-            accounts[user].ictx = 0
+            accounts[user].cbill = 0
             print(f"You paid RM{paid}")
-            print(f"Remaining income tax = RM{accounts[user].util}")
+            print(f"Remaining credit card bill = RM{accounts[user].cbill}")
             print(f"Your balance is now RM{accounts[user].bal}")
 
             input("Press ENTER to continue") 
+            actions.append("Paid credit card bill")
             os.system("clear")
             print ("Thank you for using XYZ Bank service")
             time.sleep(1.0)
 
             paying = False               
             os.system("clear")
-            mainMenu()
-welcome()
+    
+def cheque():
+  print("Please place your cheque in the deposit box.")
+
+            
+if __name__ == "__main__":
+    welcome()
