@@ -55,8 +55,14 @@ def filter(num, type, validity):
         else:
             return validity
 
+def clear():
+    if os.name == 'nt':
+        os.system("clear")
+    else:
+        os.system("cls")
+
 def main():
-    os.system("clear")
+    os.system("cls")
     print("Welcome to XYZ ATM")
     input("Please Press Enter To Proceed") 
     login()
@@ -97,7 +103,7 @@ def login():
                             cnt = 0                            
                             loginTime = time.strftime("%A, %d %B %Y %X", time.localtime())
                             actions.append(f"Logged in at {loginTime}")
-                            os.system("clear")
+                            clear()
                             mainMenu()
                                 
                         if cnt == 1:
@@ -150,7 +156,7 @@ def mainMenu():
             print("Your balance is : RM", accounts[user].bal)
             actions.append("Checked balance")
             input("Press enter to continue. ")
-            os.system("clear")
+            clear()
 
         elif sel == "2":
             withdrawal()
@@ -190,7 +196,7 @@ def mainMenu():
             
         
         elif sel == "14":
-            os.system("clear")
+            os.system("cls")
             print("Thank you, have a great day!")
             input("Press ENTER to exit")
             inMenu = False
@@ -202,17 +208,18 @@ def mainMenu():
 
 def withdrawal():
     print("Cash Withdrawal \n")
+    print("You currently balance RM", accounts[user].bal)
     withdraw = int(input("How much would you like to withdraw? RM"))
 
     if withdraw < 10: 
         print("Please state a value more than RM 10")
         time.sleep(3)
-        os.system("clear")
+        clear()
 
     elif withdraw > accounts[user].bal:
         print ("You do not have sufficient balance to withdraw")
         time.sleep(3)
-        os.system("clear")
+        clear()
         
     else:
         accounts[user].bal -= withdraw
@@ -222,12 +229,13 @@ def withdrawal():
         print("Withdrawl successful. Your current balance is RM", accounts[user].bal)
         actions.append(f"Withdrew RM{str(withdraw)}")
         input("Press ENTER to continue")
-        os.system("clear")
+        clear()
 
 def deposit():
     print("Cash Deposit\n")
     depositing = True
     while depositing:
+        print("You currently balance RM", accounts[user].bal)
         deposit = int(input("How much would you like to deposit? RM"))
 
         if deposit <= 0:
@@ -243,14 +251,13 @@ def deposit():
             actions.append(f"Deposited RM{str(deposit)}")
             input("Press ENTER to continue")
             depositing = False
-            os.system("clear")
-           
+            clear()
 
 def fund_transfer():
     print("Transfer Funds within Banks\n")
 
     if accounts[user].bal <= 0:
-        print("You have no credits to transfer")
+        print("You have no balance to transfer")
         input("Press ENTER to continue")
 
     elif accounts[user].bal >= 0:
@@ -258,6 +265,7 @@ def fund_transfer():
         transferable = False
         same = False
         while transferring:
+            print("You currently balance RM", accounts[user].bal)
             transferAcc = input("Enter the Account No. for transfer: ")
 
             if filter(transferAcc, "account", False): # checks if account format is correct
@@ -292,7 +300,6 @@ def fund_transfer():
                             print("Your current balance is RM", accounts[user].bal)
                             continue
                               
-
                         else: 
                             newBalTransfer = accounts[user].bal- transferFund
                             accounts[user].bal = newBalTransfer
@@ -306,7 +313,7 @@ def fund_transfer():
                             print("Your balance is now RM", accounts[user].bal)
                             actions.append(f"Transferred RM{str(transferFund)} to another account")
                             input("Press ENTER to continue")
-                            os.system("clear")
+                            clear()
                             transferring = False
                             break
                             
@@ -323,25 +330,25 @@ def fund_transfer():
                 print("Invalid input\nPress ENTER to continue")
                 option = input("Press X to return to Main Menu")
                 if (option.lower() == "x"):
-                    os.system("clear")
+                    clear()
                     mainMenu()
 
 def utilBill():
     paying = True
     while paying:
-
+        print("You currently balance RM", accounts[user].bal)
         print (f"Your current outstanding utilities bill is RM {accounts[user].util}")
         if accounts[user].bal < accounts[user].util:
             input("You have insufficient amount to pay your bill\nPress ENTER to return")
             paying = False
-            os.system("clear")
+            clear()
 
         else: 
             procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
     
             if procedure.lower() == "x":
                 paying = False
-                os.system("clear")
+                clear()
     
             else: 
                 for i in range (1, 6):
@@ -350,7 +357,7 @@ def utilBill():
                 
                 print("Processed!")
                 time.sleep(0.5)
-                os.system("clear")
+                clear()
     
                 paid = accounts[user].util
                 remaining = accounts[user].bal - accounts[user].util
@@ -362,15 +369,16 @@ def utilBill():
     
                 input("Press ENTER to continue") 
                 actions.append("Paid utility bills")
-                os.system("clear")
+                clear()
                 print ("Thank you for using XYZ Bank service")
                 time.sleep(1.0)
     
                 paying = False               
-                os.system("clear")
+                clear()0
                 mainMenu()
                 
 def mobileTopUp():
+    print("You currently balance RM", accounts[user].bal)
     mobile_number = input("Please enter your 10-digit mobile number\n:")
     if filter(mobile_number, "mobile", False):
         mobile_number = int(mobile_number)
@@ -393,24 +401,23 @@ def mobileTopUp():
                     print(".", end = "")                        
                     time.sleep(0.2)
                     
-
                 if accounts[user].bal < 10:
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
                     processing = False  
-                    os.system("clear")
+                    clear()
 
                 else:    
                     time.sleep(2)
-                    os.system("clear")
+                    clear()
                     print("Process completed")
                     accounts[user].bal -= 10
                     print("Your balance is now RM", accounts[user].bal)
                     actions.append("Mobile Top Up for RM10")
                     processing = False
                     input("Press ENTER to continue")
-                    os.system("clear")
+                    clear()
             
             elif choice == "2":
                 print("You have chosen the big ball package (RM25)")
@@ -424,17 +431,17 @@ def mobileTopUp():
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
-                    os.system("clear")
+                    clear()
 
                 else: 
                     time.sleep(2)
-                    os.system("clear")
+                    os.system("cls")
                     print("Process completed")
                     accounts[user].bal -= 25
                     print("Your balance is now RM", accounts[user].bal)
                     actions.append("Mobile Top Up for RM25")
                     input("Press ENTER to continue")
-                    os.system("clear")
+                    clear()
                     processing = False
                     
             
@@ -451,17 +458,17 @@ def mobileTopUp():
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
-                    os.system("clear")
+                    clear()
 
                 else:
                     time.sleep(2)
-                    os.system("clear")
+                    clear()
                     print("Process completed")
                     accounts[user].bal -= 50
                     print("Your balance is now RM", accounts[user].bal)
                     actions.append("Mobile Top Up for RM50")
                     input("Press ENTER to continue")
-                    os.system("clear")
+                    clear()
                     processing = False
                     
 
@@ -473,31 +480,30 @@ def mobileTopUp():
                     print(".", end = "")                        
                     time.sleep(0.2)
                     
-
                 if accounts[user].bal < 100:
                     time.sleep(2)
                     print("Insufficient amount")
                     input("Press ENTER to continue") 
-                    os.system("clear")
+                    clear()
 
                 else: 
                     time.sleep(2)
-                    os.system("clear")
+                    clear()
                     print("Process completed")
                     accounts[user].bal -= 100
                     print("Your balance is now RM", accounts[user].bal)
                     actions.append("Mobile Top Up for RM100")
                     input("Press ENTER to continue")
-                    os.system("clear")
+                    clear()
                     processing = False 
 
             else:
                 input("Invalid choice!\nPress ENTER to continue")
-                os.system("clear")
+                clear()
             
     else:
         input("Invalid format!\nPlease enter a 10-digit number\n\nPress ENTER to continue")
-        os.system("clear")
+        clear()
 
 def changePin():
     change = True
@@ -508,7 +514,7 @@ def changePin():
     
         if proceed.lower() == "x":
            change = False 
-           os.system("clear")
+           clear()
 
         else:
             auth = False
@@ -532,7 +538,7 @@ def changePin():
                             attempts -= 1
                         else:
                             input("Action denied\nPress ENTER to continue")
-                            os.system("clear")
+                            clear()
 
                 else:
                     input("Wrong PIN number!\nPress ENTER to continue")
@@ -546,49 +552,50 @@ def overseaActivation():
         deactivate = input("Would you like to deactivate it?\nPress ENTER to deactivate\nEnter 'x' to return")
 
         if deactivate.lower() == "x":
-            os.system("clear")
+            clear()
         else:
             accounts[user].oact = False 
             input("It has been deactivated\nPress ENTER to continue")
             actions.append("Deactivated Oversea Usage")
-            os.system("clear")
+            clear()
             
     else:
         print("Inactive")
         activate = input("Would you like to activate it?\nPress ENTER to activate\nEnter 'X' to cancel")  
         
         if activate.lower() == "x":
-            os.system("clear")
+            clear()
             
         else:
             accounts[user].oact = True
             input("It is now activated\nPress ENTER to continue")
             actions.append("Activated Oversea Usage")
-            os.system("clear")
+            clear()
 
 def printStatements():
     procedure = input("would you like to print now?\nPress ENTER to proceed\nEnter 'X' to cancel")
 
     if procedure.lower() == "x":
         input("Press ENTER to continue")
-        os.system("clear")
+        clear()
 
     else:
-        os.system("clear")
+        clear()
         print("Statements\n")
         for i in range (len(actions)):
             print(f"{i+1}. {actions[i]}")
             time.sleep(0.1)
             
         input("Press ENTER to continue")
-        os.system("clear")
+        clear()
 
 def incomeTax():
+    print("You currently balance RM", accounts[user].bal)
     print(f"Your current income tax is RM {accounts[user].ictx}")
     proceed = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel\n")
 
     if proceed.lower() == "x":
-        os.system("clear")
+        clear()
 
     else: 
         for i in range (1, 6):
@@ -597,12 +604,12 @@ def incomeTax():
         
         if accounts[user].bal < accounts[user].ictx:
             input("Insufficient amount!\nPress ENTER to return")
-            os.system("clear")
+            clear()
 
         else: 
             print("Processed!")
             time.sleep(0.5)
-            os.system("clear")
+            clear()
     
             paid = accounts[user].ictx
             remaining = accounts[user].bal - accounts[user].ictx
@@ -613,10 +620,10 @@ def incomeTax():
             print(f"Your balance is now RM{accounts[user].bal}")
     
             input("Press ENTER to continue")
-            os.system("clear")
+            clear()
             print ("Thank you for using XYZ Bank service")
             time.sleep(1.0)
-            os.system("clear")
+            clear()
 
 def payLoans():
   
@@ -628,16 +635,16 @@ def payLoans():
         selection = input("Which loan would you like to enquire?\nEnter 'x' to return\n")
 
         if selection.lower() == "x":
-            os.system("clear")
+            clear()
 
         elif selection == "1":
-
+            print("You currently balance RM", accounts[user].bal)
             print (f"Your current outstanding car loan is RM {accounts[user].cloan}")
             procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
     
             if procedure.lower() == "x":
                 paying = False
-                os.system("clear")
+                clear()
     
             else: 
                 if accounts[user].bal < accounts[user].cloan:
@@ -651,7 +658,7 @@ def payLoans():
                 
                 print("Processed!")
                 time.sleep(0.5)
-                os.system("clear")
+                clear()
     
                 paid = accounts[user].cloan
                 remaining = accounts[user].bal - accounts[user].cloan
@@ -663,21 +670,21 @@ def payLoans():
     
                 input("Press ENTER to continue") 
                 actions.append("Paid Car Loan")
-                os.system("clear")
+                clear()
                 print ("Thank you for using XYZ Bank service")
                 time.sleep(1.0)
     
                 paying = False               
-                os.system("clear")
+                clear()
 
         elif selection == "2":
-
+            print("You currently balance RM", accounts[user].bal)
             print (f"Your current outstanding bank loan is RM {accounts[user].bloan}")
             procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
     
             if procedure.lower() == "x":
                 paying = False
-                os.system("clear")
+                clear()
     
             else: 
                 if accounts[user].bal < accounts[user].bloan:
@@ -691,7 +698,7 @@ def payLoans():
                 
                 print("Processed!")
                 time.sleep(0.5)
-                os.system("clear")
+                clear()
     
                 paid = accounts[user].bloan
                 remaining = accounts[user].bal - accounts[user].bloan
@@ -703,22 +710,22 @@ def payLoans():
     
                 input("Press ENTER to continue") 
                 actions.append("Paid Bank Loan")
-                os.system("clear")
+                clear()
                 print ("Thank you for using XYZ Bank service")
                 time.sleep(1.0)
     
                 paying = False               
-                os.system("clear")
+                clear()
 
         elif selection == "3":
-
+            print("You currently balance RM", accounts[user].bal)
             print (f"Your current outstanding house loan is RM {accounts[user].hloan}")
             procedure = input("would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
     
             if procedure.lower() == "x":
                 paying = False
-                os.system("clear")
-    
+                clear()
+   
             else: 
                 if accounts[user].bal < accounts[user].hloan:
                     input("You have insufficient amount to pay your loan\nPress ENTER to return")
@@ -731,7 +738,7 @@ def payLoans():
                 
                 print("Processed!")
                 time.sleep(0.5)
-                os.system("clear")
+                clear()
     
                 paid = accounts[user].hloan
                 remaining = accounts[user].bal - accounts[user].hloan
@@ -743,32 +750,32 @@ def payLoans():
     
                 input("Press ENTER to continue") 
                 actions.append("Paid House Loan")
-                os.system("clear")
+                clear()
                 print ("Thank you for using XYZ Bank service")
                 time.sleep(1.0)
     
                 paying = False               
-                os.system("clear")
+                clear()
 
         else:
             input("Invalid selection!\nPress ENTER to continue")
-            os.system("clear")
+            clear()
 
 def cbill():
     paying = True
     while paying:
-
+        print("You currently balance RM", accounts[user].bal)
         print (f"Your current outstanding credit card bill is RM {accounts[user].cbill}")
         proceed = input("Would you like to pay now?\nPress ENTER to proceed\nEnter 'X' to cancel")
 
         if proceed.lower() == "x":
             paying = False
-            os.system("clear")
+            clear()
 
         if accounts[user].bal < accounts[user].cbill:
             input("You have insufficient amount to pay your bill\nPress ENTER to return")
             paying = False
-            os.system("clear")
+            clear()
 
         else: 
             for i in range (1, 6):
@@ -777,7 +784,7 @@ def cbill():
             
             print("Processed!")
             time.sleep(0.5)
-            os.system("clear")
+            clear()
 
             paid = accounts[user].cbill
             remaining = accounts[user].bal - accounts[user].cbill
@@ -789,19 +796,19 @@ def cbill():
 
             input("Press ENTER to continue") 
             actions.append("Paid credit card bill")
-            os.system("clear")
+            clear()
             print ("Thank you for using XYZ Bank service")
             time.sleep(1.0)
 
             paying = False               
-            os.system("clear")
+            clear()
     
 def cheque():
     procedure = input("Please place the cheque facing the keypads.\nPress ENTER to proceed\nEnter 'X' to cancel")
     
     if procedure.lower() == "x":
         input("Press ENTER to continue")
-        os.system("clear")
+        clear()
     else: 
         for i in range (1, 10):
           print("validating...", i * 10, "%")
@@ -809,7 +816,7 @@ def cheque():
         print("Your cheque will be send to validate\nThank you for using XYZ Bank services.")
         actions.append("Deposited cheque")
         time.sleep(3.0)
-        os.system("clear")
+        clear()
 
 if __name__ == "__main__":
     main()
